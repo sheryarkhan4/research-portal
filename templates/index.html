@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Portal</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 0; background: #ece4e4; color: #222; }
+  header { background: #333; color: #fff; padding: 1rem; text-align: center; }
+  main { max-width: 760px; margin: 0 auto; padding: 1.5rem 1rem; }
+  h2 { margin-top: 0; }
+  form, .card { background: #fff; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
+  form { display: grid; gap: .6rem; }
+  input, textarea, select { padding: .5rem; font: inherit; border: 1px solid #ccc; border-radius: 4px; width: 100%; box-sizing: border-box; }
+  button { padding: .55rem 1rem; border: 0; border-radius: 4px; background: #333; color: #fff; cursor: pointer; font: inherit; }
+  button.del { background: #b33; margin-top: .5rem; }
+  .card h3 { margin: 0 0 .4rem; }
+  .card p { margin: .25rem 0; }
+  .meta { color: #555; font-size: .9rem; }
+  #status { color: #a33; min-height: 1.2em; }
+</style>
+</head>
+<body>
+<header><h1>Welcome to the Research Portal</h1></header>
+
+<main>
+  <h2>Add a research opportunity</h2>
+  <form id="form">
+    <input name="Research_title" placeholder="Research title" required>
+    <textarea name="Research_description" placeholder="Description" rows="2" required></textarea>
+    <input name="Research_area" placeholder="Research area" required>
+    <input name="Faculty_name" placeholder="Faculty name" required>
+    <input name="Departement" placeholder="Department" required>
+    <input name="Required_skills" placeholder="Required skills" required>
+    <input name="Avaliable_positions" type="number" min="1" placeholder="Available positions" required>
+    <input name="Application_deadline" type="date" required>
+    <select name="status">
+      <option>Open</option>
+      <option>Closed</option>
+    </select>
+    <button type="submit">Add opportunity</button>
+  </form>
+
+  <p id="status"></p>
+  <h2>Opportunities</h2>
+  <div id="list"></div>
+</main>
+
+<script>
+  const API = "/api/researchtitles";
+  const listEl = document.getElementById("list");
+  const statusEl = document.getElementById("status");
+
+  function setStatus(msg) { statusEl.textContent = msg; }
+
+  async function loadResearch() {
+    try {
+      const res = await fetch(API);
+      if (!res.ok) throw new Error();
+      const items = await res.json();
+      listEl.innerHTML = "";
+      if (items.length === 0) setStatus("No opportunities yet. Add one above.");
+      else setStatus("");
+      items.forEach(showCard);
+    } catch {
+      setStatus("Could not load data. Check that the backend is running.");
+    }
+  }
+
+  function line(label, value) {
+    const p = document.createElement("p");
+    p.className = "meta";
+    p.textContent = label + ": " + value;
+    return p;
+  }
+
+  function showCard(r) {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const h = document.createElement("h3");
+    h.textContent = r.Research_title;
+
+    const desc = document.createElement("p");
+    desc.textContent = r.Research_description;
+
+    const del = document.createElement("button");
+    del.className = "del";
+    del.textContent = "Delete";
+    del.onclick = () => deleteResearch(r.id);
+
+    card.append(
+      h, desc,
+      line("Area", r.Research_area),
+      line("Faculty", r.Faculty_name),
+      line("Department", r.Departement),
+      line("Skills", r.Required_skills),
+      line("Positions", r.Avaliable_positions),
+      line("Deadline", r.Application_deadline),
+      line("Status", r.status),
+      del
+    );
+    listEl.appendChild(card);
+  }
+
+  document.getElementById("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    data.Avaliable_positions = parseInt(data.Avaliable_positions, 10);
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error();
+      e.target.reset();
+      loadResearch();
+    } catch {
+      setStatus("Could not add the opportunity.");
+    }
+  });
+
+  async function deleteResearch(id) {
+    if (!confirm("Delete this opportunity?")) return;
+    try {
+      const res = await fetch(API + "/" + id, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      loadResearch();
+    } catch {
+      setStatus("Could not delete. Make sure the DELETE route is /api/researchtitles/<id>.");
+    }
+  }
+
+  loadResearch();
+</script>
+</body>
+</html>

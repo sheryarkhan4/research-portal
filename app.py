@@ -1,5 +1,6 @@
 from flask import Flask,jsonify,request
 from flask_sqlalchemy import SQLAlchemy
+from flask import render_template
 
 app = Flask(__name__)
 #create database
@@ -43,7 +44,7 @@ with app.app_context():
 #create routes
 @app.route('/')
 def home():
-    return jsonify({'message': 'Welcome to the Research API'})
+   return render_template("index.html")
 
 #GET
 #to get all research titles/opportunities
@@ -117,7 +118,9 @@ def delete_research_title(id):
         return jsonify({'message': 'Research title deleted successfully'})
     else:
         return jsonify({'message': 'Research title not found'}), 404
-    
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
