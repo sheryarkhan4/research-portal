@@ -1,0 +1,8 @@
+$kind: http-request
+description: ""
+url: http://localhost:5000/api/researchtitles/1
+method: GET
+body:
+  type: json
+  content: ""
+order: 1790591782799

@@ -54,7 +54,7 @@ def get_research_titles():
     return jsonify([research.to_dict() for research in research_list])
 
 #to find a specific research title by id
-@app.route('/researchtitles/<int:id>', methods=['GET'])
+@app.route('/api/researchtitles/<int:id>', methods=['GET'])
 def get_research_title(id):
     research = Research.query.get(id)
     if research:
@@ -87,7 +87,7 @@ def create_research_title():
 
  #put
  #updates a research title/opportunity
-@app.route('/researchtitles/<int:id>', methods=['PUT'])
+@app.route('/api/researchtitles/<int:id>', methods=['PUT'])
 def update_research_title(id):
     research = Research.query.get(id)
     if research:
@@ -109,7 +109,7 @@ def update_research_title(id):
 
 #delete
 #deletes a research title/opportunity
-@app.route('/researchtitles/<int:id>', methods=['DELETE'])
+@app.route('/api/researchtitles/<int:id>', methods=['DELETE'])
 def delete_research_title(id):
     research = Research.query.get(id)
     if research:
