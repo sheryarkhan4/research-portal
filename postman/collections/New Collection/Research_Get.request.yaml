@@ -1,8 +1,8 @@
 $kind: http-request
 description: ""
-url: http://localhost:5000/api/researchtitles/1
+url: http://localhost:5000/api/researchtitles
 method: GET
 body:
   type: json
   content: ""
-order: 1790591782799
+order: 3776900060416646

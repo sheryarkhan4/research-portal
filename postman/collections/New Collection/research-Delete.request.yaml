@@ -1,0 +1,5 @@
+$kind: http-request
+description: ""
+url: http://localhost:5000/api/researchtitles/3
+method: DELETE
+order: 4236866097011117

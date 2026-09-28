@@ -1,0 +1,28 @@
+$kind: http-request
+description: ""
+url: http://localhost:5000/api/researchtitles/3
+method: PUT
+body:
+  type: json
+  content: "{\r
+
+    \  \"Research_title\": \"AI in Healthcare\",\r
+
+    \  \"Research_description\": \"Using machine learning to detect diseases\",\r
+
+    \  \"Research_area\": \"Artificial Intelligence\",\r
+
+    \  \"Faculty_name\": \"Dr. Ahmed\",\r
+
+    \  \"Departement\": \"Computer Science\",\r
+
+    \  \"Required_skills\": \"Python, ML\",\r
+
+    \  \"Avaliable_positions\": 2,\r
+
+    \  \"Application_deadline\": \"2026-12-01\",\r
+
+    \  \"status\": \"Closed\"\r
+
+    }"
+order: 4200293246648655
